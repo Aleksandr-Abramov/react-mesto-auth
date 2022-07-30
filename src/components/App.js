@@ -9,6 +9,9 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import EditProfilePopup from "./EditProfilePopup.jsx";
 import EditAvatarPopup from "./EditAvatarPopup.jsx";
 import AddPlacePopup from "./AddPlacePopup.jsx";
+import Register from "./Register.jsx";
+import Login from "./Login.jsx";
+import { Route, Switch } from 'react-router-dom';
 
 function App() {
   const [isEditProfilePopupOpen, setProfileOpen] = useState(false);
@@ -132,43 +135,59 @@ function App() {
 
   return (
     <div className="page">
-      <CurrentUserContext.Provider value={currentUser}>
-        <Header />
-        <Main
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          avatarLink={avatarLink}
-          onCardDelete={handleCardDelete}
-          cards={cards}
-          handleCardLike={handleCardLike}
-        />
-        <Footer />
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          closePopup={closeAllPopups}
-          onUpdateUser={handleUpdateUser}
-        />
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          closePopup={closeAllPopups}
-          createCard={handleAddCard}
-        />
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}
-        />
-
-        <PopupWithForm
-          title="Вы уверены?"
-          name="popup_delete"
-          modClassForm="popup__form_height"
-          btnText="Да"
-        />
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-      </CurrentUserContext.Provider>
+      
+      <Switch>
+        <Route exact path="/">
+          <CurrentUserContext.Provider value={currentUser}>
+            <Header />
+            <Main
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardClick={handleCardClick}
+              avatarLink={avatarLink}
+              onCardDelete={handleCardDelete}
+              cards={cards}
+              handleCardLike={handleCardLike}
+            />
+            <Footer />
+            
+            <EditProfilePopup
+              isOpen={isEditProfilePopupOpen}
+              closePopup={closeAllPopups}
+              onUpdateUser={handleUpdateUser}
+            />
+            <AddPlacePopup
+              isOpen={isAddPlacePopupOpen}
+              closePopup={closeAllPopups}
+              createCard={handleAddCard}
+            />
+            <EditAvatarPopup
+              isOpen={isEditAvatarPopupOpen}
+              onClose={closeAllPopups}
+              onUpdateAvatar={handleUpdateAvatar}
+            />
+            <PopupWithForm
+              title="Вы уверены?"
+              name="popup_delete"
+              modClassForm="popup__form_height"
+              btnText="Да"
+            />
+            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+            
+          </CurrentUserContext.Provider>
+        </Route>
+        <Route exact path="/sign-up">
+          <Header registerPage="sign-up"/>
+          <Register />
+        </Route>
+        <Route exact path="/sign-in">
+          <Header registerPage="sign-in"/>
+          <Login />
+        </Route>
+      </Switch>
+      
+      
     </div>
   );
 }

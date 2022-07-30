@@ -61,3 +61,12 @@
 @import url(./blocks/popup/__form/_height/popup__form_height.css);
 @import url(./blocks/popup/__title/_margin/popup__title_margin.css);
 @import url(./blocks/popup/__input-error/_margin/popup__input-error_margin.css);
+
+/* registration */
+@import url(./blocks/registration/registration.css);
+@import url(./blocks/registration/__title/registration__title.css);
+@import url(./blocks/registration/__form/registration__form.css);
+@import url(./blocks/registration/__input/registration__input.css);
+@import url(./blocks/registration/__btn/registration__btn.css);
+@import url(./blocks/registration/__link/registration__link.css);
+@import url(./blocks/registration/__link-header/registration__link-header.css);
