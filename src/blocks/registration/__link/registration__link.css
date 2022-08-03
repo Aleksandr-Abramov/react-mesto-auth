@@ -7,3 +7,7 @@
   text-align: center;
   color: #ffffff;
 }
+.registration__link:hover {
+  color: #ffffff;
+  opacity: 0.6;
+}

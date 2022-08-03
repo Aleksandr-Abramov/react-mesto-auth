@@ -1,15 +1,28 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import Input from "./Input";
+import { Link } from "react-router-dom";
 
 
-function Register() {
+function Register({createUserToken, openToltipPopup}) {
+
+  const [registerData, setRegisterData] = useState({email:"", password:""});
+
+  function handleChange(e) {
+    const {name, value} = e.target;
+    setRegisterData({...registerData, [name]: value});
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const { ...data } = registerData;
+    createUserToken(data);
+  }
   
   return (
     <main className="main">
       <section className="registration">
         <h1 className="registration__title">Регистрация</h1>
-        <form className="registration__form" name="registration" action="#">
+        <form className="registration__form" name="registration" action="#" onSubmit={handleSubmit}>
           
           <Input
             type="email"
@@ -18,7 +31,8 @@ function Register() {
             name="email"
             minlength="2"
             maxlength="40"
-            // value=""
+            value={registerData.email}
+            onChange={handleChange}
           />
           <Input
             type="password"
@@ -27,7 +41,8 @@ function Register() {
             name="password"
             minlength="2"
             maxlength="40"
-            // value=""
+            value={registerData.password}
+            onChange={handleChange}
           />
           <button
             className="registration__btn"

@@ -1,9 +1,11 @@
-import { apiToken } from "./utils";
+import { apiToken, apiTokenUser } from "./utils";
 
 class Api {
-  constructor(tokenData) {
+  constructor(tokenData, apiTokenUser) {
     this._url = tokenData.url;
     this._token = tokenData.token;
+    this._userTokenUrl = apiTokenUser.url;
+  
   }
   thenFunction(res) {
     if (res.ok) {
@@ -68,7 +70,7 @@ class Api {
       },
     }).then((res) => this.thenFunction(res));
   }
-
+  //создание карточек
   createCard({ name, link }) {
     return fetch(`${this._url}/cards`, {
       method: "POST",
@@ -82,7 +84,7 @@ class Api {
       }),
     }).then((res) => this.thenFunction(res));
   }
-
+  //удаление карточек
   deleteCard(cardId) {
     return fetch(`${this._url}/cards/${cardId}`, {
       method: "DELETE",
@@ -92,6 +94,7 @@ class Api {
       },
     }).then((res) => this.thenFunction(res));
   }
+  //поставить лайк
   setLike(cardId) {
     return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: "PUT",
@@ -101,7 +104,7 @@ class Api {
       },
     }).then((res) => this.thenFunction(res));
   }
-
+  //удалить лайк
   deleteLike(cardId) {
     return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: "DELETE",
@@ -111,7 +114,7 @@ class Api {
       },
     }).then((res) => this.thenFunction(res));
   }
-
+  //поставить/удалить лайк
   changeLikeCardStatus(cardId, isLiked) {
     return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: isLiked ? "PUT" : "DELETE",
@@ -121,7 +124,44 @@ class Api {
       },
     }).then((res) => this.thenFunction(res));
   }
+  //регистрация токена в системе
+  registerUserToken({email, password}) {
+    return fetch(`${this._userTokenUrl}/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password: password,
+        email: email,
+      }),
+    }).then((res) => this.thenFunction(res));
+  }
+  //вход в систему
+  autorizationUserToken({email, password}) {
+    return fetch(`${this._userTokenUrl}/signin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password: password,
+        email: email,
+      }),
+    }).then((res) => this.thenFunction(res));
+  }
+  //запросить токен
+  checkToken(token) {
+    return fetch(`${this._userTokenUrl}/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : `Bearer ${token}`
+      }
+    }).then((res) => this.thenFunction(res));
+  }
+
 }
 
-const api = new Api(apiToken);
+const api = new Api(apiToken, apiTokenUser);
 export default api;
