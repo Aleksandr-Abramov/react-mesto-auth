@@ -5,7 +5,6 @@ class Api {
     this._url = tokenData.url;
     this._token = tokenData.token;
     this._userTokenUrl = apiTokenUser.url;
-  
   }
   thenFunction(res) {
     if (res.ok) {
@@ -125,7 +124,7 @@ class Api {
     }).then((res) => this.thenFunction(res));
   }
   //регистрация токена в системе
-  registerUserToken({email, password}) {
+  registerUserToken({ email, password }) {
     return fetch(`${this._userTokenUrl}/signup`, {
       method: "POST",
       headers: {
@@ -138,7 +137,7 @@ class Api {
     }).then((res) => this.thenFunction(res));
   }
   //вход в систему
-  autorizationUserToken({email, password}) {
+  autorizationUserToken({ email, password }) {
     return fetch(`${this._userTokenUrl}/signin`, {
       method: "POST",
       headers: {
@@ -156,11 +155,10 @@ class Api {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization" : `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     }).then((res) => this.thenFunction(res));
   }
-
 }
 
 const api = new Api(apiToken, apiTokenUser);

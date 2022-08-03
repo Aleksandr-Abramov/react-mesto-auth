@@ -212,15 +212,12 @@ function App() {
       return;
     }
     setLoggedIn(true);
-    console.log(loggedIn);
-    history.push("/"); //тут проблема. Если оставить хистору. Пользователь всегда редиректится на /. 
-    //Если нажать выход, все ок редирект на /sigin-up. Но, мне кажется нужно сделать что бы он мог ходить по всем страницам.
+    history.push("/");
     api
       .checkToken(localStorage.getItem("jwt"))
       .then((res) => {
         setEmailTex(res.data.email);
         setLoggedIn(true);
-        
       })
       .catch((err) => {
         console.log(`Ошибка при получении email:${err}`);
@@ -231,7 +228,8 @@ function App() {
    */
   React.useEffect(() => {
     checkToken();
-  },[]);
+  }, [loggedIn]);
+
   return (
     <div className="page">
       <Switch>
