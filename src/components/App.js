@@ -29,6 +29,7 @@ function App() {
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [emainText, setEmailTex] = useState("");
+  const [toltipMessage, setToltipMessage] = useState(true);
   const history = useHistory();
 
   /**
@@ -37,25 +38,28 @@ function App() {
   /**
    * Получает информацию о пользователе при загрузки, заполняет карточки
    */
-  React.useEffect(() => {
-    api
-      .getInfoUser()
-      .then((res) => {
-        setCurrentUser(res);
-      })
-      .catch((err) =>
-        console.log(`Ошибка при получении данных пользователя:${err}`)
-      );
 
-    api
-      .getInitialCards()
-      .then((res) => {
-        setCards(res);
-      })
-      .catch((err) =>
-        console.log(`Ошибка при получении данных карточек:${err}`)
-      );
-  }, []);
+  React.useEffect(() => {
+    if (loggedIn) {
+      api
+        .getInfoUser()
+        .then((res) => {
+          setCurrentUser(res);
+        })
+        .catch((err) =>
+          console.log(`Ошибка при получении данных пользователя:${err}`)
+        );
+
+      api
+        .getInitialCards()
+        .then((res) => {
+          setCards(res);
+        })
+        .catch((err) =>
+          console.log(`Ошибка при получении данных карточек:${err}`)
+        );
+    }
+  }, [loggedIn]);
 
   /**
    * Ставит/удаляет лайк.
@@ -173,10 +177,15 @@ function App() {
     api
       .registerUserToken(userToken)
       .then((res) => {
+        setToltipMessage(true);
         handleToltipPopupOpen();
         history.push("sign-in");
       })
-      .catch((err) => console.log(`Ошибка при сохранении токена:${err}`));
+      .catch((err) => {
+        setToltipMessage(false);
+        handleToltipPopupOpen();
+        console.log(`Ошибка при сохранении токена:${err}`);
+      });
   }
   /**
    * Получает доступ к сайту, сохранят jwt, редиректит на главную страницу.
@@ -190,6 +199,8 @@ function App() {
         localStorage.setItem("jwt", res.token);
       })
       .catch((err) => {
+        setLoggedIn(false);
+        setToltipMessage(false);
         handleToltipPopupOpen();
         console.log(`Ошибка при получении токена:${err}`);
       });
@@ -289,11 +300,6 @@ function App() {
             </Link>
           </Header>
           <Register createUserToken={handleRegisterUserToken} />
-          <InfoTooltip
-            registerPage="sign-up"
-            isOpen={isToltipPopupOpen}
-            closePopup={closeAllPopups}
-          />
         </Route>
         <Route exact path="/sign-in">
           <Header>
@@ -302,13 +308,13 @@ function App() {
             </Link>
           </Header>
           <Login getUserToken={handleGetUserToken} />
-          <InfoTooltip
-            registerPage="sign-in"
-            isOpen={isToltipPopupOpen}
-            closePopup={closeAllPopups}
-          />
         </Route>
       </Switch>
+      <InfoTooltip
+        status={toltipMessage}
+        isOpen={isToltipPopupOpen}
+        closePopup={closeAllPopups}
+      />
     </div>
   );
 }
